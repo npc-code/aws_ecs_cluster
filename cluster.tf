@@ -1,6 +1,11 @@
 resource "aws_ecs_cluster" "ecs_cluster" {
   name = var.cluster_name
   capacity_providers = [aws_ecs_capacity_provider.ecs_cluster_capacity_provider.name]
+
+   #setting {
+   # name  = "containerInsights"
+   # value = "enabled"
+   #}
 }
 
 resource "aws_launch_configuration" "ecs_cluster_instance_config" {
@@ -15,6 +20,10 @@ resource "aws_launch_configuration" "ecs_cluster_instance_config" {
   key_name = var.key_name
   security_groups = [aws_security_group.ecs_instance_sg.id]
   associate_public_ip_address = true
+
+  root_block_device {
+    encrypted             = true
+  }
 
   lifecycle {
     create_before_destroy = true
